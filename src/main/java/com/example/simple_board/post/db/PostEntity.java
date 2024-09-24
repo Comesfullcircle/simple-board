@@ -1,6 +1,8 @@
 package com.example.simple_board.post.db;
 
+import com.example.simple_board.board.db.BoardEntity;
 import com.example.simple_board.reply.db.ReplyEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +23,10 @@ public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long boardId;
+    @ManyToOne //N:1
+    @JsonIgnore
+    @ToString.Exclude
+    private BoardEntity board; //board + _id => board_id
     private String userName;
     private String password;
     private String email;
