@@ -1,12 +1,15 @@
 package com.example.simple_board.post.service;
 
 import com.example.simple_board.board.db.BoardRepository;
+import com.example.simple_board.common.Api;
+import com.example.simple_board.common.Pagination;
 import com.example.simple_board.post.db.PostEntity;
 import com.example.simple_board.post.db.PostRepository;
 import com.example.simple_board.post.model.PostRequest;
 import com.example.simple_board.post.model.PostViewRequest;
 import com.example.simple_board.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,7 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
-    private final ReplyService replyService;
+   // private final ReplyService replyService;
 
     public PostEntity create(
             PostRequest postRequest
@@ -26,7 +29,7 @@ public class PostService {
         var boardEntity = boardRepository.findById(postRequest.getBoardId()).get();
 
         var  entity = PostEntity.builder()
-                .board(boardEntity) // <- 임시 고정
+                .boardEntity(boardEntity) // <- 임시 고정
                 .userName(postRequest.getUserName())
                 .password(postRequest.getPassword())
                 .email(postRequest.getEmail())
@@ -57,8 +60,11 @@ public class PostService {
                     }
 
                     //답변글도 같이 적용
-                    var replyList = replyService.findAllByPostId(it.getId());
-                    it.setReplyList(replyList);
+                    //연관관계 맵핑 후 필요 없어 졌음
+                    //PostEntity에서 답글을 가져올 List를 @OneToMany를 통해서 자동으로 mapped by 해서
+                    //replyList를 가져오기 때문
+                   // var replyList = replyService.findAllByPostId(it.getId());
+                   // it.setReplyList(replyList);
 
                     return it;
                 }).orElseThrow(
@@ -68,8 +74,24 @@ public class PostService {
                 );
     }
 
-    public List<PostEntity> all() {
-        return postRepository.findAll();
+    public Api<List<PostEntity>> all(Pageable pageable) {
+        var list = postRepository.findAll(pageable);
+
+        var pagination = Pagination.builder()
+                .page(list.getNumber())
+                .size(list.getSize())
+                .currentElements(list.getNumberOfElements())
+                .totalElements(list.getTotalElements())
+                .TotalPage(list.getTotalPages())
+                .build()
+                ;
+
+        var response = Api.<List<PostEntity>>builder()
+                .body(list.toList())
+                .pagination(pagination)
+                .build();
+
+        return response;
     }
 
     public void delete(PostViewRequest postViewRequest) {

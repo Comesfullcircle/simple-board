@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class PostEntity {
     @ManyToOne //N:1
     @JsonIgnore
     @ToString.Exclude
-    private BoardEntity board; //board + _id => board_id
+    @JoinColumn(name = "board_id")
+    private BoardEntity boardEntity; //board + _id => board_id
     private String userName;
     private String password;
     private String email;
@@ -36,8 +38,10 @@ public class PostEntity {
     private String content;
     private LocalDateTime postedAt;
 
-    //답변이 없을수도 있으니 답변이 안달리는 것을 default 설정
-    @Transient //데이터베이스의 컬럼으로 인식되지 않도록 @Transient 어노테이션 추가
-    private List<ReplyEntity> replyList = Arrays.asList();
+    @OneToMany(
+            mappedBy = "post"
+    )
+    @Builder.Default
+    private List<ReplyEntity> replyList = new ArrayList<>();
 
 }

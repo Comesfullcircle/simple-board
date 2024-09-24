@@ -25,8 +25,6 @@ public class PostDto {
      * DTO: 데이터 전송을 위한 객체로, 특정 API 요청 또는 응답에 필요한 정보만 담습니다.
      */
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long boardId; //board + _id => board_id
     private String userName;

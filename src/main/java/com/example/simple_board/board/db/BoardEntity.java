@@ -3,6 +3,8 @@ package com.example.simple_board.board.db;
 import com.example.simple_board.post.db.PostEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -22,7 +24,10 @@ public class BoardEntity {
     private String status;
 
     @OneToMany(
-            mappedBy = "board"
+            mappedBy = "boardEntity"
     )
+    @Builder.Default
+    @Where(clause = "status = 'REGISTERED'")
+    @org.hibernate.annotations.OrderBy(clause = "id desc")
     private List<PostEntity> postList = List.of();
 }

@@ -13,7 +13,7 @@ public class BoardService {
 
 
     private final BoardRepository boardRepository;
-    private final BoardConverter boardConvertor;
+    private final BoardConverter boardConverter;
 
     public BoardDto create(
             BoardRequest boardRequest
@@ -26,11 +26,11 @@ public class BoardService {
 
        var saveEntity = boardRepository.save(entity);
 
-       return boardConvertor.toDto(saveEntity);
+       return boardConverter.toDto(saveEntity);
     }
 
     public BoardDto view(Long id) {
         var entity = boardRepository.findById(id).get();
-        return boardConvertor.toDto(entity);
+        return boardConverter.toDto(entity);
     }
 }

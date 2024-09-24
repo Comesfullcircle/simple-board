@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/board")
@@ -30,10 +32,17 @@ public class BoardApiController {
 
     @GetMapping("/id/{id}")
     public BoardDto view(
-            @PathVariable Long id
+            @PathVariable("id") Long id
     ){
         var entity = boardService.view(id);
         log.info("result : {}", entity);
         return boardService.view(id);
+    }
+
+    @GetMapping("/ids/{id}")
+    public List<BoardEntity> all(
+            @PathVariable Long id
+    ){
+        return boardRepository.findAll();
     }
 }
