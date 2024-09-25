@@ -1,6 +1,8 @@
 package com.example.simple_board.reply.controller;
 
+import com.example.simple_board.crud.CRUDAbstractApiController;
 import com.example.simple_board.reply.db.ReplyEntity;
+import com.example.simple_board.reply.model.ReplyDto;
 import com.example.simple_board.reply.model.ReplyRequest;
 import com.example.simple_board.reply.service.ReplyService;
 import jakarta.validation.Valid;
@@ -13,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reply")
 @RequiredArgsConstructor
-public class ReplyApiController {
-    private final ReplyService replyService;
+public class ReplyApiController extends CRUDAbstractApiController<ReplyDto, ReplyEntity> {
+
+    /*private final ReplyService replyService;
 
     @PostMapping("")
     public ReplyEntity create(
@@ -23,5 +26,5 @@ public class ReplyApiController {
             ReplyRequest replyRequest
     ){
         return replyService.create(replyRequest);
-    }
+    }*/
 }
